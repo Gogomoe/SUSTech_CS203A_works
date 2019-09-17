@@ -12,7 +12,8 @@ public class C {
         for (int i = 0; i < n; i++) {
             full[i] = scanner.nextInt();
         }
-        Arrays.sort(full);
+
+        full = Arrays.stream(full).sorted().toArray();
 
         int[] arr = new int[n];
         int[] counts = new int[n];
