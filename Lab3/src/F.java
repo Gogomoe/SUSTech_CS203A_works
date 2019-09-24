@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.StringTokenizer;
@@ -16,7 +13,7 @@ public class F {
         public StringTokenizer tokenizer;
 
         public InputReader(InputStream stream) {
-            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            reader = new BufferedReader(new InputStreamReader(stream), 1024 * 1024);
             tokenizer = null;
         }
 
@@ -47,6 +44,7 @@ public class F {
 
     public static void main(String[] args) {
         InputReader scanner = new InputReader(System.in);
+        PrintStream out = new PrintStream(new BufferedOutputStream(System.out, 1024 * 1024));
         int n = scanner.nextInt();
 
         int[][] links = new int[n][];
@@ -77,21 +75,22 @@ public class F {
 
             if (now[3] == -1) {
                 int[] succ = links[now[2]];
-                System.out.print(abs(now[0] - succ[0]) + " ");
+                out.print(abs(now[0] - succ[0]) + " ");
                 succ[3] = -1;
             } else if (now[2] == -1) {
                 int[] pred = links[now[3]];
-                System.out.print(abs(now[0] - pred[0]) + " ");
+                out.print(abs(now[0] - pred[0]) + " ");
                 pred[2] = -1;
             } else {
                 int[] pred = links[now[3]];
                 int[] succ = links[now[2]];
                 pred[2] = succ[1];
                 succ[3] = pred[1];
-                System.out.print(min(abs(now[0] - succ[0]), abs(now[0] - pred[0])) + " ");
+                out.print(min(abs(now[0] - succ[0]), abs(now[0] - pred[0])) + " ");
             }
-
         }
+
+        out.close();
     }
 }
 
