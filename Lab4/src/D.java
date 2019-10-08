@@ -31,13 +31,13 @@ public class D {
         for (int i = 0; i < n; i++) {
             int it = arr[i];
             int minim = min[i];
-            if (it == minim) {
-                out.print(it + " ");
-                continue;
-            }
             while (!stack.isEmpty() && stack.last() < minim) {
                 out.print(stack.last() + " ");
                 stack.removeLast();
+            }
+            if (it == minim) {
+                out.print(it + " ");
+                continue;
             }
             stack.addLast(it);
         }
