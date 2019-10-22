@@ -5,6 +5,8 @@ public class KMP {
     public static void main(String[] args) {
         System.out.println(Arrays.toString(getNext("axyabcaxy".toCharArray())));
         System.out.println(Arrays.toString(getNext("abxabyabxabyabx".toCharArray())));
+
+        System.out.println(kmpSearch("abcaaabbbabx".toCharArray(), "aabb".toCharArray()));
     }
 
     private static int[] getNext(char[] chars) {
@@ -21,6 +23,25 @@ public class KMP {
             }
         }
         return next;
+    }
+
+
+    private static int kmpSearch(char[] s, char[] p) {
+        int i = 0;
+        int j = 0;
+        int[] next = getNext(p);
+        while (i < s.length && j < p.length) {
+            if (j == -1 || s[i] == p[j]) {
+                i++;
+                j++;
+            } else {
+                j = next[j];
+            }
+        }
+        if (j == p.length)
+            return i - j;
+        else
+            return -1;
     }
 
 }
