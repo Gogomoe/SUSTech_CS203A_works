@@ -28,6 +28,10 @@ public class AVL {
         return list;
     }
 
+    private int size() {
+        return size(root);
+    }
+
     private static class Node {
         int value;
         Node left;
@@ -265,7 +269,7 @@ public class AVL {
             if (!avl.toArrayList().equals(sorted)) {
                 System.out.println("insert error");
             }
-            if (avl.root.size != sorted.size() || size(avl.root.left) + size(avl.root.right) != sorted.size() - 1) {
+            if (avl.size() != sorted.size() || size(avl.root.left) + size(avl.root.right) != sorted.size() - 1) {
                 System.out.println("size error");
             }
             if (avl.min() != sorted.get(0)) {
@@ -287,7 +291,7 @@ public class AVL {
                 System.out.println("remove error");
             }
 
-            if (avl.root.size != sorted.size() || size(avl.root.left) + size(avl.root.right) != sorted.size() - 1) {
+            if (avl.size() != sorted.size() || size(avl.root.left) + size(avl.root.right) != sorted.size() - 1) {
                 System.out.println("size error");
             }
             if (avl.min() != sorted.get(0)) {
