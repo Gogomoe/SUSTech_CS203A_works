@@ -1,22 +1,20 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.PriorityQueue;
 
 public class Kruskal {
 
-    private PriorityQueue<Edge> pq;
     private ArrayList<Edge> mst;
 
     public Kruskal(EdgeWeightGraph graph) {
         int nodes = graph.nodes;
         mst = new ArrayList<>();
-        pq = new PriorityQueue<>(nodes, Comparator.comparingInt(it -> it.weight));
+
+        MinPQ pq = MinPQ.fromArray(graph.edgeList);
         UnionFindSet uf = new UnionFindSet(nodes);
 
-        pq.addAll(graph.edgeList);
-
-        while (!pq.isEmpty() && mst.size() < nodes - 1) {
-            Edge e = pq.poll();
+        while (pq.size > 0 && mst.size() < nodes - 1) {
+            Edge e = pq.deleteMin();
             int a = e.p1, b = e.p2;
             if (uf.connected(a, b)) {
                 continue;
@@ -102,6 +100,78 @@ public class Kruskal {
             }
             parents[pa] = pb;
         }
+    }
+
+    private static class MinPQ {
+
+        private Edge[] arr;
+        private int size;
+
+        private static final Comparator<Edge> comp = new Comparator<Edge>() {
+            @Override
+            public int compare(Edge o1, Edge o2) {
+                return o1.weight - o2.weight;
+            }
+        };
+
+        static MinPQ fromArray(Collection<Edge> edges) {
+            MinPQ p = new MinPQ();
+            p.arr = new Edge[edges.size() + 1];
+            p.size = edges.size();
+
+            int pos = 1;
+            for (Edge edge : edges) {
+                p.arr[pos] = edge;
+                pos++;
+            }
+            for (int i = p.size / 2; i >= 1; i--) {
+                p.sink(i);
+            }
+            return p;
+        }
+
+        private void swim(int index) {
+            while (index > 1 && comp.compare(arr[index], arr[index / 2]) < 0) {
+                swap(index, index / 2);
+                index /= 2;
+            }
+        }
+
+        private void sink(int index) {
+            while (index * 2 <= size) {
+                int j = index * 2;
+                if (j + 1 <= size && comp.compare(arr[j + 1], arr[j]) < 0) {
+                    j++;
+                }
+                if (comp.compare(arr[index], arr[j]) > 0) {
+                    swap(index, j);
+                } else {
+                    break;
+                }
+                index = j;
+            }
+        }
+
+        private Edge deleteMin() {
+            Edge min = arr[1];
+            swap(1, size);
+            size--;
+            sink(1);
+            return min;
+        }
+
+        private void insert(Edge x) {
+            size++;
+            arr[size] = x;
+            swim(size);
+        }
+
+        private void swap(int i1, int i2) {
+            Edge temp = arr[i1];
+            arr[i1] = arr[i2];
+            arr[i2] = temp;
+        }
+
     }
 
     public static void main(String[] args) {
